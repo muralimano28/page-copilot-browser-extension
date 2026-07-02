@@ -49,11 +49,13 @@ function populateSidebarModels(provider: 'gemini' | 'openai' | 'anthropic'): voi
   
   const modelsMap = {
     gemini: [
-      { value: 'gemini-2.5-flash', text: 'Gemini 2.5 Flash (Fast/Eco)' },
-      { value: 'gemini-2.5-pro', text: 'Gemini 2.5 Pro (Power)' },
+      { value: 'gemini-3.5-flash', text: 'Gemini 3.5 Flash (Default/Fast)' },
+      { value: 'gemini-3.1-pro-preview', text: 'Gemini 3.1 Pro (Preview)' },
+      { value: 'gemini-3.1-flash-lite', text: 'Gemini 3.1 Flash-Lite' },
+      { value: 'gemini-2.5-flash', text: 'Gemini 2.5 Flash' },
+      { value: 'gemini-2.5-pro', text: 'Gemini 2.5 Pro' },
       { value: 'gemini-2.0-flash', text: 'Gemini 2.0 Flash' },
-      { value: 'gemini-1.5-flash', text: 'Gemini 1.5 Flash' },
-      { value: 'gemini-1.5-pro', text: 'Gemini 1.5 Pro' }
+      { value: 'gemini-2.0-flash-lite', text: 'Gemini 2.0 Flash-Lite' }
     ],
     openai: [
       { value: 'gpt-4o-mini', text: 'GPT-4o Mini (Fast)' },
