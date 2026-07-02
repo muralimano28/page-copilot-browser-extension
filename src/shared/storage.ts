@@ -3,14 +3,20 @@ import browser from 'webextension-polyfill';
 export interface ExtensionStorageSchema {
   theme: 'light' | 'dark' | 'system';
   copilotEnabled: boolean;
-  userApiKey?: string;
+  selectedModel: 'gemini' | 'openai' | 'anthropic';
+  geminiApiKey: string;
+  openaiApiKey: string;
+  anthropicApiKey: string;
   savedNotes: string[];
 }
 
 const DEFAULT_STORAGE: ExtensionStorageSchema = {
   theme: 'system',
   copilotEnabled: true,
-  userApiKey: '',
+  selectedModel: 'gemini',
+  geminiApiKey: '',
+  openaiApiKey: '',
+  anthropicApiKey: '',
   savedNotes: [],
 };
 

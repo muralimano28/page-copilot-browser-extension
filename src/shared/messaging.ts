@@ -1,10 +1,30 @@
 import browser from 'webextension-polyfill';
 
 export type ExtensionMessage =
-  | { type: 'GET_PAGE_SUMMARY'; payload?: never }
-  | { type: 'PAGE_SUMMARY_RESPONSE'; payload: { summary: string } }
-  | { type: 'HIGHLIGHT_SELECTION'; payload: { text: string } }
-  | { type: 'NOTIFICATION'; payload: { title: string; message: string } };
+  | {
+    type: 'GET_PAGE_CONTEXT';
+    payload?: never
+  }
+  | {
+    type: 'PAGE_SUMMARY_RESPONSE';
+    payload: { summary: string }
+  }
+  | {
+    type: 'HIGHLIGHT_SELECTION';
+    payload: { text: string }
+  }
+  | {
+    type: 'NOTIFICATION';
+    payload: { title: string; message: string }
+  }
+  | {
+    type: 'SEND_CHAT_QUERY';
+    payload: {
+      messages: { role: 'user' | 'assistant'; content: string }[];
+      pageContext: { title: string; description: string; text: string; };
+      model?: string;
+    }
+  };
 
 /**
  * Type-safe messenger wrapper. Ensures message schemas are strictly validated

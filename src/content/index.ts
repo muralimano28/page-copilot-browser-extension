@@ -6,6 +6,28 @@ console.log('[Page Copilot] Content script injected successfully!');
 ExtensionMessenger.addListener((message) => {
   console.log('[Page Copilot Content] Received message:', message);
 
+  if (message.type === 'GET_PAGE_CONTEXT') {
+    const selectedText = window.getSelection()?.toString().trim() || '';
+    const title = document.title || '';
+    const descriptionMeta = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+    
+    if (selectedText) {
+      console.log('[Page Copilot Content] Using selected text context of length:', selectedText.length);
+      return {
+        title,
+        description: descriptionMeta,
+        text: `[User's Highlighted/Selected Text]:\n${selectedText}`,
+      };
+    }
+
+    const textContext = document.body?.innerText || '';
+    return {
+      title,
+      description: descriptionMeta,
+      text: textContext.substring(0, 18000), // Limit context size to ~4k tokens to be lightweight & performant
+    };
+  }
+
   if (message.type === 'HIGHLIGHT_SELECTION') {
     return handleHighlightSelection(message.payload.text);
   }
@@ -25,7 +47,7 @@ function handleHighlightSelection(textToHighlight: string): { success: boolean }
 
   const range = selection.getRangeAt(0);
   const mark = document.createElement('mark');
-  
+
   // Premium highlight styling
   mark.style.backgroundColor = 'rgba(233, 64, 87, 0.25)';
   mark.style.borderBottom = '2px solid #E94057';

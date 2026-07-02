@@ -6,7 +6,9 @@
   "permissions": [
     "storage",
     "scripting",
-    "tabs"
+    "tabs",
+    "sidePanel",
+    "alarms"
   ],
   "host_permissions": [
     "<all_urls>"
@@ -16,12 +18,14 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "popup/index.html",
     "default_icon": {
       "16": "icons/icon-16.png",
       "48": "icons/icon-48.png",
       "128": "icons/icon-128.png"
     }
+  },
+  "side_panel": {
+    "default_path": "sidebar/index.html"
   },
   "options_ui": {
     "page": "options/index.html",

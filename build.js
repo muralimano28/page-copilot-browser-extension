@@ -85,7 +85,7 @@ async function runBuild() {
       minify: !isDev,
       rollupOptions: {
         input: {
-          popup: path.resolve(__dirname, 'src/popup/index.html'),
+          sidebar: path.resolve(__dirname, 'src/sidebar/index.html'),
           options: path.resolve(__dirname, 'src/options/index.html'),
         },
         output: {

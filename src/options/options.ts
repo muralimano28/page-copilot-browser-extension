@@ -2,8 +2,17 @@ import { ExtensionStorage } from '../shared/storage';
 import { applyTheme } from '../shared/theme';
 
 // Elements
-const apiKeyInput = document.getElementById('api-key') as HTMLInputElement;
 const themeSelect = document.getElementById('select-theme') as HTMLSelectElement;
+const modelSelect = document.getElementById('select-model') as HTMLSelectElement;
+
+const geminiApiKeyInput = document.getElementById('gemini-api-key') as HTMLInputElement;
+const openaiApiKeyInput = document.getElementById('openai-api-key') as HTMLInputElement;
+const anthropicApiKeyInput = document.getElementById('anthropic-api-key') as HTMLInputElement;
+
+const geminiGroup = document.getElementById('gemini-key-group') as HTMLDivElement;
+const openaiGroup = document.getElementById('openai-key-group') as HTMLDivElement;
+const anthropicGroup = document.getElementById('anthropic-key-group') as HTMLDivElement;
+
 const btnSave = document.getElementById('btn-save') as HTMLButtonElement;
 const btnReset = document.getElementById('btn-reset') as HTMLButtonElement;
 const saveStatus = document.getElementById('save-status') as HTMLSpanElement;
@@ -18,10 +27,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Restore settings
     const settings = await ExtensionStorage.getAll();
-    apiKeyInput.value = settings.userApiKey || '';
     themeSelect.value = settings.theme;
+    modelSelect.value = settings.selectedModel;
+    geminiApiKeyInput.value = settings.geminiApiKey || '';
+    openaiApiKeyInput.value = settings.openaiApiKey || '';
+    anthropicApiKeyInput.value = settings.anthropicApiKey || '';
+
+    // Handle initial visibility of key groups
+    toggleApiKeyGroups(settings.selectedModel);
 
     // Listeners
+    modelSelect.addEventListener('change', handleModelChange);
     btnSave.addEventListener('click', handleSaveSettings);
     btnReset.addEventListener('click', handleResetSettings);
   } catch (error) {
@@ -29,19 +45,46 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+// Show/Hide API Key forms depending on selected model
+function toggleApiKeyGroups(model: 'gemini' | 'openai' | 'anthropic'): void {
+  geminiGroup.classList.add('hidden');
+  openaiGroup.classList.add('hidden');
+  anthropicGroup.classList.add('hidden');
+
+  if (model === 'gemini') {
+    geminiGroup.classList.remove('hidden');
+  } else if (model === 'openai') {
+    openaiGroup.classList.remove('hidden');
+  } else if (model === 'anthropic') {
+    anthropicGroup.classList.remove('hidden');
+  }
+}
+
+// Handle model dropdown changes live
+function handleModelChange(): void {
+  const model = modelSelect.value as 'gemini' | 'openai' | 'anthropic';
+  toggleApiKeyGroups(model);
+}
+
 // Save Settings
 async function handleSaveSettings(): Promise<void> {
-  const apiKey = apiKeyInput.value.trim();
   const theme = themeSelect.value as 'light' | 'dark' | 'system';
+  const model = modelSelect.value as 'gemini' | 'openai' | 'anthropic';
+  const geminiKey = geminiApiKeyInput.value.trim();
+  const openaiKey = openaiApiKeyInput.value.trim();
+  const anthropicKey = anthropicApiKeyInput.value.trim();
 
   try {
-    await ExtensionStorage.set('userApiKey', apiKey);
     await ExtensionStorage.set('theme', theme);
+    await ExtensionStorage.set('selectedModel', model);
+    await ExtensionStorage.set('geminiApiKey', geminiKey);
+    await ExtensionStorage.set('openaiApiKey', openaiKey);
+    await ExtensionStorage.set('anthropicApiKey', anthropicKey);
 
     // Apply saved theme immediately
     await applyTheme();
 
-    // Show visual save confirmation toast (Rule 5: async operations error-caught)
+    // Show visual save confirmation toast
     if (saveTimeoutId) {
       window.clearTimeout(saveTimeoutId);
     }
@@ -61,7 +104,7 @@ async function handleSaveSettings(): Promise<void> {
 // Reset Settings
 async function handleResetSettings(): Promise<void> {
   const confirmReset = confirm(
-    'Are you sure you want to restore default configurations? This will permanently delete your API keys, notes, and custom settings.'
+    'Are you sure you want to restore default configurations? This will permanently delete your API keys, theme preferences, and saved highlights.'
   );
   if (!confirmReset) return;
 
