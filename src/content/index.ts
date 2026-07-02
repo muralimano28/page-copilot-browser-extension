@@ -1,3 +1,5 @@
+import { Readability } from '@mozilla/readability';
+import TurndownService from 'turndown';
 import { ExtensionMessenger } from '../shared/messaging';
 
 console.log('[Page Copilot] Content script injected successfully!');
@@ -12,12 +14,48 @@ ExtensionMessenger.addListener((message) => {
     const descriptionMeta = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
     
     if (selectedText) {
+      handleHighlightSelection(selectedText);
+
       console.log('[Page Copilot Content] Using selected text context of length:', selectedText.length);
       return {
         title,
         description: descriptionMeta,
         text: `[User's Highlighted/Selected Text]:\n${selectedText}`,
       };
+    }
+
+    // Try extracting clean content using Mozilla's Readability and Turndown
+    try {
+      const docClone = document.cloneNode(true) as Document;
+      const reader = new Readability(docClone);
+      const article = reader.parse();
+      if (article && article.content) {
+        console.log('[Page Copilot Content] Extracted clean HTML via Readability');
+        
+        let markdownText = '';
+        try {
+          const turndownService = new TurndownService({
+            headingStyle: 'atx',
+            hr: '---',
+            bulletListMarker: '-',
+            codeBlockStyle: 'fenced'
+          });
+          markdownText = turndownService.turndown(article.content);
+        } catch (turndownErr) {
+          console.warn('[Page Copilot Content] Turndown conversion failed, falling back to textContent:', turndownErr);
+          markdownText = article.textContent || '';
+        }
+
+        if (markdownText.trim()) {
+          return {
+            title: article.title || title,
+            description: article.excerpt || descriptionMeta,
+            text: markdownText.trim().substring(0, 18000), // Limit context size to ~4k tokens to be lightweight & performant
+          };
+        }
+      }
+    } catch (e) {
+      console.warn('[Page Copilot Content] Readability extraction failed, falling back to innerText:', e);
     }
 
     const textContext = document.body?.innerText || '';
@@ -48,9 +86,9 @@ function handleHighlightSelection(textToHighlight: string): { success: boolean }
   const range = selection.getRangeAt(0);
   const mark = document.createElement('mark');
 
-  // Premium highlight styling
-  mark.style.backgroundColor = 'rgba(233, 64, 87, 0.25)';
-  mark.style.borderBottom = '2px solid #E94057';
+  // Premium highlight styling (aligned with Apple Notes brand yellow accent #FFCC00)
+  mark.style.backgroundColor = 'rgba(255, 204, 0, 0.25)';
+  mark.style.borderBottom = '2px solid #FFCC00';
   mark.style.borderRadius = '3px';
   mark.style.color = 'inherit';
   mark.style.padding = '1px 3px';

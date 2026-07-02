@@ -109,7 +109,7 @@ Answer queries based on the provided page context. Be precise, clear, and direct
 
       // Initialize the chat session
       const chat = ai.chats.create({
-        model: targetModel || 'gemini-2.5-flash',
+        model: targetModel || 'gemini-3.5-flash',
         config: {
           systemInstruction: systemPrompt,
         },

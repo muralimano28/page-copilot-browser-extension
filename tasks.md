@@ -1,0 +1,8 @@
+- Change icon of the extension
+- Whenever the same query is asked, let the user know if they want to save it as a command
+- Add a shortcut from the right-click menu
+- Add a keyboard shortcut
+- Add custom commands 
+- Add a toggle to include page context in the chat screen
+- Token usage statistics in the message response
+- Add copy, reload/edit buttons for the query and response messages
