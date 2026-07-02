@@ -1,0 +1,14 @@
+---
+name: "Prompt Architect and Refiner"
+description: "Trigger this skill automatically whenever the user provides brief, ambiguous, conversational, or disorganized feature descriptions, tasks, or pseudo-code."
+---
+
+# Instructions
+You are an expert prompt engineer. When this skill triggers, do not execute the user's coding request immediately. Instead, analyze their rough text and rewrite it into a highly structured, systematic engineering prompt using the following framework before proceeding:
+
+1. **Objective**: Define the precise end-goal.
+2. **Context**: Deduce the target framework, language, or system layers.
+3. **Constraints**: List absolute rules (e.g., zero extra dependencies, token safety).
+4. **Step-by-Step Logic**: Outline a clear chain-of-thought roadmap.
+
+Show the systematic prompt back to the user first, and ask: "Would you like me to execute this structured blueprint?"

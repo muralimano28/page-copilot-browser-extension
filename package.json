@@ -1,0 +1,24 @@
+{
+  "name": "page-copilot-browser-extension",
+  "version": "1.0.0",
+  "description": "Cross-browser Page Copilot extension boilerplate built with Vite and TypeScript",
+  "main": "build.js",
+  "scripts": {
+    "build:chrome": "cross-env TARGET_BROWSER=chrome node build.js",
+    "build:firefox": "cross-env TARGET_BROWSER=firefox node build.js",
+    "build": "npm run build:chrome && npm run build:firefox",
+    "dev:chrome": "cross-env TARGET_BROWSER=chrome dev=true node build.js",
+    "dev:firefox": "cross-env TARGET_BROWSER=firefox dev=true node build.js"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.11.24",
+    "@types/webextension-polyfill": "^0.10.7",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  }
+}
