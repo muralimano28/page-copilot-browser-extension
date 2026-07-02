@@ -8,32 +8,29 @@
 Page Copilot
 
 **Short Description**
-An AI-powered web assistant that generates page summaries and lets you highlight and save notes on any website.
+AI-powered side panel assistant. Ask questions and get answers about any webpage using Google Gemini, OpenAI, or Claude.
 
 **Detailed Description**
-Page Copilot is your AI-powered companion for web browsing. It helps you read faster, capture key details, and stay organized.
+Page Copilot is your AI-powered companion that lives in your browser's side panel, letting you chat directly with any web page. Instantly extract key insights, summarize dense articles, or ask questions about specific paragraphs.
 
-Key Features:
-- Instant Summarization: Generate a clean, structured summary of any webpage in seconds using simulated AI model analytics.
-- Text Highlight Tool: Highlight and label key text selections directly in the webpage DOM.
-- Local Notes Manager: Save, edit, and clear custom notes and snippets. All data is kept 100% private.
-- Cross-Browser: Built using standards that run identically on Chrome and Firefox.
+Features:
+- Seamless Side Panel Chat: Clean iOS/macOS inspired conversational interface that opens directly in your sidebar.
+- Precision Context Parsing: Uses Mozilla Readability to clean page noise and Turndown to send context in highly structured Markdown format to the LLM.
+- Selection Priority: Simply highlight any text on the page to ask questions about that specific section, or default to the entire page.
+- Choose Your Model: Connect Gemini 3.5 Flash, 3.1 Pro, GPT-4o, or Claude in settings.
+- Private Credentials: API keys are stored securely inside your local browser storage and never touch third-party servers.
 
-How to Use:
-1. Navigate to any webpage you want to summarize or highlight.
-2. Click the Page Copilot icon in your browser toolbar to open the extension popup.
-3. Click "Analyze Page" to extract and summarize key points.
-4. Select any text on the webpage, type a note, and click "Highlight" to highlight the selection in red/pink and save it to your local notes.
-5. Access your notes lists directly in the popup, or open "Settings" to customize options.
-
-Privacy Notice:
-We value your privacy. All notes, highlights, and API keys are stored locally on your device using sandboxed extension storage. No user data is sent to external servers unless you specify an AI API credential, in which case queries are sent directly to the model provider.
+How to use it:
+1. Click the Page Copilot extension icon to launch the side panel.
+2. Select your text of interest, or leave selection empty to chat about the full page.
+3. Enter your query or prompt into the chatbot field and press Send.
+4. Go to Settings (gear icon) to input your API keys and customize the interface themes.
 
 **Category**
 Productivity
 
 **Single Purpose**
-Generates summaries and highlights text selections on web pages to capture notes.
+Enables users to select or extract webpage content and query it using customized LLM providers inside the sidebar.
 
 **Primary Language**
 English
@@ -42,30 +39,36 @@ English
 
 | Asset | Dimensions | Status | Filename |
 |-------|-----------|--------|----------|
-| Store Icon | 128×128 PNG | ✅ Ready | `src/icons/icon-128.png` |
+| Store Icon | 128×128 PNG | 🟡 Needs export | `icons/icon-128.png` |
 | Screenshot 1 | 1280×800 | ⬜ Not created | |
-| Small Promo Tile | 440×280 | ⬜ Not created | |
+| Screenshot 2 | 1280×800 | ⬜ Not created | |
 
 ### Screenshot Notes
-- Screenshot 1: Active popup window displaying a completed page analysis and active local notes log, showing the modern dark theme design.
-- Screenshot 2: Injected content script action, illustrating highlighted text in a web article.
+- Screenshot 1: The Page Copilot sidebar open next to a long news article, displaying a summary reply.
+- Screenshot 2: Highlighted text on a page being summarized inside the sidebar.
+- Screenshot 3: Settings page showing API Key fields and Apple HIG Inset grouped listings.
 
 ## Permissions Justification
 
 | Permission | Type | Justification |
 |------------|------|---------------|
-| `storage` | permissions | Allows saving user settings (theme, toggles, API keys) and local notes log, persisting them across sessions. |
-| `scripting` | permissions | Enables the programmatic injection of the highlight DOM wrapper script into the active browser tab. |
-| `tabs` | permissions | Enables reading the URL and page title of the active tab to provide context-aware page summaries and validate targets. |
-| `<all_urls>` | host_permissions | Allows injecting the content script and analyzing page context on web pages matching the user's active browsing. |
+| `storage` | permissions | Used to persist extension configurations, theme state, model selection, and user credentials (API keys) securely on-device. |
+| `scripting` | permissions | Required to execute highlights on selected text blocks inside webpage DOMs. |
+| `tabs` | permissions | Required to inspect active tab URLs/titles for context metadata and send page context messages from the side panel. |
+| `sidePanel` | permissions | Required to configure and mount the native Chrome side panel container for the assistant. |
+| `alarms` | permissions | Required to set up periodic timers that manage background service worker lifecycle updates. |
+| `<all_urls>` | host_permissions | Allows the content script to extract DOM content (via Readability) and highlight text selections on any site the user navigates to. |
 
 ## Privacy & Data Use
 
 ### Data Collection
 
-**Does the extension collect user data?** No
+**Does the extension collect user data?** Yes (Stored locally, credentials sent directly to user-configured LLM providers only).
 
-All operations run locally or communicate directly with user-specified endpoints. No developer-facing analytics or logs are collected.
+| Data Type | Collected? | Transmitted Off-Device? | Purpose | Shared with Third Parties? |
+|-----------|-----------|------------------------|---------|---------------------------|
+| Authentication info | Yes | Yes (directly to provider) | Stored API keys are used to authenticate requests to Gemini, OpenAI, or Anthropic. | No |
+| Website content | Yes | Yes (directly to provider) | Selected text or parsed HTML elements are sent to the LLM as user-initiated context. | No |
 
 ### Data Use Certification
 - [x] Data is NOT sold to third parties
@@ -75,7 +78,7 @@ All operations run locally or communicate directly with user-specified endpoints
 ## Privacy Policy
 
 **Privacy Policy URL**
-Not applicable (No data collection or off-device transmission).
+`https://github.com/muralimano28/page-copilot-browser-extension/blob/main/PRIVACY_POLICY.md` (Placeholder placeholder)
 
 ## Distribution
 
@@ -86,21 +89,13 @@ Not applicable (No data collection or off-device transmission).
 ## Developer Info
 
 **Publisher Name**
-Developer Team
+Page Copilot Team
 
 **Contact Email**
-developer@example.com
-
-**Homepage URL**
-https://github.com/mano/page-copilot-browser-extension
+muralimano28@gmail.com
 
 ## Version History
 
 | Version | Date | Changes | Status |
 |---------|------|---------|--------|
-| 1.0.0 | 2026-07-02 | Initial release boilerplate containing popups, options, background worker, and content scripts. | Draft |
-
-## Review Notes
-
-### Known Issues / Limitations
-- None. Designed strictly around Manifest V3.
+| 1.0.0 | 2026-07-02 | Initial release supporting side panel, Gemini `@google/genai` integration, and Readability+Turndown extraction. | Draft |
